@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Margaux Christie — visual artist, photographer and creative collaborator. Art, photography, publishing and mixed media practice.">
+  <title>Margaux Christie — MCGC Studio</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="wrap">
+    <header>
+      <nav>
+        <a class="logo" href="#top">MCGC Studio</a>
+        <div class="navlinks">
+          <a href="#books">Books</a><a href="#clients">Clients</a><a href="#photo">Photography</a><a href="#mixed">Mixed Media</a><a href="#contact">Contact</a>
+        </div>
+      </nav>
+      <div class="hero" id="top">
+        <div class="kicker" id="hero-kicker"></div>
+        <h1 id="hero-name"></h1>
+      </div>
+      <div class="hero-bottom">
+        <p class="intro" id="hero-intro"></p>
+        <a class="scroll" href="#books">Selected work ↓</a>
+      </div>
+    </header>
+
+    <section id="books">
+      <div class="section-head">
+        <div class="section-no">01 / Publishing</div>
+        <div><h2>Books &amp;<br>publishing</h2><p class="section-intro" id="books-intro"></p></div>
+      </div>
+      <div class="books" id="books-grid"></div>
+    </section>
+
+    <section id="clients">
+      <div class="section-head">
+        <div class="section-no">02 / Selected clients</div>
+        <div><h2>Art world &amp;<br>creative clients</h2><p class="section-intro" id="clients-intro"></p></div>
+      </div>
+      <div class="clients" id="clients-grid"></div>
+    </section>
+
+    <section id="photo">
+      <div class="section-head">
+        <div class="section-no">03 / Personal practice</div>
+        <div><h2>Analogue<br>photography</h2><p class="section-intro" id="photo-intro"></p></div>
+      </div>
+      <div class="gallery" id="photo-gallery"></div>
+    </section>
+
+    <section id="mixed">
+      <div class="section-head">
+        <div class="section-no">04 / Mixed media</div>
+        <div><h2>Painting,<br>video &amp; music</h2><p class="section-intro" id="mixed-intro"></p></div>
+      </div>
+      <div class="mixed" id="mixed-grid"></div>
+    </section>
+
+    <section id="contact">
+      <div class="contact">
+        <div><div class="section-no">05 / Contact</div><h2 id="contact-title"></h2></div>
+        <div class="contact-copy">
+          <p id="contact-copy"></p>
+          <a class="email" id="contact-email" href="#"></a>
+          <p style="font-size:12px;color:#77736d;margin-top:24px" id="contact-languages"></p>
+        </div>
+      </div>
+    </section>
+
+    <footer><span id="footer-name"></span><a href="#top">Back to top ↑</a></footer>
+  </main>
+
+  <script src="content.js"></script>
+  <script>
+    const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+    const media = (item, className='tile') => {
+      if (!item.image) return `<div class="${className}">${esc(item.placeholder || 'Add image')}</div>`;
+      return `<div class="${className}"><img src="${esc(item.image)}" alt="${esc(item.alt || item.title || '')}" loading="lazy"></div>`;
+    };
+
+    document.title = site.title;
+    document.getElementById('hero-kicker').textContent = site.heroKicker;
+    document.getElementById('hero-name').innerHTML = site.name.split(' ').map((x,i)=>i===0?esc(x)+'<br>':esc(x)).join('');
+    document.getElementById('hero-intro').textContent = site.heroIntro;
+    document.getElementById('books-intro').textContent = site.booksIntro;
+    document.getElementById('clients-intro').textContent = site.clientsIntro;
+    document.getElementById('photo-intro').textContent = site.photoIntro;
+    document.getElementById('mixed-intro').textContent = site.mixedIntro;
+    document.getElementById('contact-title').innerHTML = site.contactTitle.replace(/\n/g,'<br>');
+    document.getElementById('contact-copy').textContent = site.contactCopy;
+    document.getElementById('contact-email').textContent = site.email;
+    document.getElementById('contact-email').href = 'mailto:' + site.email;
+    document.getElementById('contact-languages').textContent = site.languages;
+    document.getElementById('footer-name').textContent = '© ' + site.name + ' / MCGC Studio';
+
+    document.getElementById('books-grid').innerHTML = books.map(b => `
+      <article class="book">
+        <a class="cover media-link" href="${esc(b.link || '#')}" ${b.link?'target="_blank" rel="noopener"':''}>
+          ${b.image ? `<img src="${esc(b.image)}" alt="${esc(b.title)}" loading="lazy">` : `<div class="cover">${esc(b.placeholder || 'Add book cover')}</div>`}
+        </a>
+        <div>
+          <h3>${esc(b.title)}</h3>
+          <div class="meta">${esc(b.meta)}</div>
+          <p>${esc(b.description)}</p>
+          <p class="editable"><strong>Your contribution:</strong> ${esc(b.contribution)}</p>
+          ${b.link ? `<a class="arrow" href="${esc(b.link)}" target="_blank" rel="noopener">${esc(b.linkLabel || 'View publication ↗')}</a>` : ''}
+        </div>
+      </article>`).join('');
+
+    document.getElementById('clients-grid').innerHTML = clients.map(c => `
+      <div class="client">${c.link ? `<a href="${esc(c.link)}" target="_blank" rel="noopener">${esc(c.name)} ↗</a>` : esc(c.name)}
+        <small>${esc(c.description)}</small>
+      </div>`).join('');
+
+    document.getElementById('photo-gallery').innerHTML = `
+      <div>
+        ${media(photo[0], 'tile tall')}
+        <p class="caption"><strong>${esc(photo[0].captionTitle)}</strong> ${esc(photo[0].caption)}</p>
+      </div>
+      <div>
+        ${media(photo[1], 'tile')}
+        <div style="height:16px"></div>
+        ${media(photo[2], 'tile')}
+      </div>`;
+
+    document.getElementById('mixed-grid').innerHTML = mixedMedia.map(m => `
+      <div>${media(m, 'tile')}<p class="caption">${esc(m.caption)}</p></div>`).join('');
+  </script>
+</body>
+</html>
